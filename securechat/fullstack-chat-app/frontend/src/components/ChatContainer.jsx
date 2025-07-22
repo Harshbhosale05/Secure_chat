@@ -8,6 +8,31 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import { useEncryptionStore } from "../store/useEncryptionStore";
 
+const Watermark = () => {
+	const { authUser } = useAuthStore();
+	if (!authUser) return null;
+
+	const watermarkText = `${authUser.email} - ${authUser._id}`;
+	return (
+		<div className='absolute inset-0 -z-10 overflow-hidden pointer-events-none'>
+			<div
+				className='absolute -top-1/4 -left-1/4 w-[200%] h-[200%]
+        flex flex-wrap gap-4 content-center
+        opacity-5'
+			>
+				{Array.from({ length: 500 }).map((_, i) => (
+					<div
+						key={i}
+						className='text-5xl font-bold text-gray-500 whitespace-nowrap -rotate-[30deg]'
+					>
+						{watermarkText}
+					</div>
+				))}
+			</div>
+		</div>
+	);
+};
+
 const ChatContainer = () => {
   const {
     messages,
@@ -98,10 +123,10 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className='flex-1 flex flex-col'>
+			<Watermark />
       <ChatHeader />
-
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className='flex-1 overflow-auto p-4'>
         {messages.map((message) => {
           // Use decryptedMessages state
           let displayText = "";
