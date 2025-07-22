@@ -17,10 +17,7 @@ services:
     startCommand: node src/index.js
     envVars:
       - key: MONGO_URI
-        fromService:
-          name: securechat-db
-          type: database
-          property: connectionString
+        sync: false # Set this manually in the Render dashboard
       - key: JWT_SECRET
         sync: false # Add this in Render's UI
       - key: CLOUDINARY_CLOUD_NAME
