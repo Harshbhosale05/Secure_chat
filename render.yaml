@@ -1,0 +1,57 @@
+services:
+  # 1. MongoDB Database
+  - name: securechat-db
+    type: pserv
+    plan: free
+    image:
+      name: mongo:5.0
+    disk:
+      name: mongo-data
+      sizeGB: 1
+      mountPath: /data/db
+
+  # 2. Backend Service (Node.js)
+  - name: securechat-backend
+    type: web
+    plan: free
+    runtime: node
+    rootDir: ./securechat/fullstack-chat-app/backend
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: MONGO_URI
+        fromService:
+          name: securechat-db
+          type: pserv
+          property: connectionString
+      - key: JWT_SECRET
+        sync: false # Add this in Render's UI
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false # Add this in Render's UI
+      - key: CLOUDINARY_API_KEY
+        sync: false # Add this in Render's UI
+      - key: CLOUDINARY_API_SECRET
+        sync: false # Add this in Render's UI
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+
+  # 3. Frontend Service (React/Vite Static Site)
+  - name: securechat-frontend
+    type: web
+    plan: free
+    runtime: static
+    rootDir: ./securechat/fullstack-chat-app/frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          name: securechat-backend
+          type: web
+          property: url 
