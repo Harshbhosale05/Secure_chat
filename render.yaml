@@ -3,8 +3,8 @@ services:
   - name: securechat-db
     type: pserv
     plan: free
-    image:
-      name: mongo:5.0
+    runtime: docker
+    dockerImage: mongo:5.0
     disk:
       name: mongo-data
       sizeGB: 1
