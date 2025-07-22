@@ -5,7 +5,6 @@ databases:
     plan: free
     ipAllowList: []
     region: oregon
-  
 
 services:
   # 2. Backend Service (Node.js)
@@ -52,4 +51,4 @@ services:
         fromService:
           name: securechat-backend
           type: web
-          property: url 
+          property: host 
