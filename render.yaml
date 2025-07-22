@@ -1,15 +1,13 @@
-services:
-  # 1. MongoDB Database
+databases:
   - name: securechat-db
-    type: pserv
+    databaseName: securechat
+    user: securechatuser
     plan: free
-    runtime: docker
-    dockerImage: mongo:5.0
-    disk:
-      name: mongo-data
-      sizeGB: 1
-      mountPath: /data/db
+    ipAllowList: []
+    region: oregon
+    type: mongodb
 
+services:
   # 2. Backend Service (Node.js)
   - name: securechat-backend
     type: web
@@ -22,7 +20,7 @@ services:
       - key: MONGO_URI
         fromService:
           name: securechat-db
-          type: pserv
+          type: database
           property: connectionString
       - key: JWT_SECRET
         sync: false # Add this in Render's UI
