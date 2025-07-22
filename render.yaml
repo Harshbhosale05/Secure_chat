@@ -1,11 +1,3 @@
-databases:
-  - name: securechat-db
-    databaseName: securechat
-    user: securechatuser
-    plan: free
-    ipAllowList: []
-    region: oregon
-
 services:
   # 2. Backend Service (Node.js)
   - name: securechat-backend
