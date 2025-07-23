@@ -23,13 +23,14 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173', // for local dev
-      'https://secure-chat-2-gtd7.onrender.com' // your deployed frontend
+      
+      'https://secure-chat-1-540z.onrender.com' // your deployed frontend
     ],
     credentials: true, // if you use cookies/sessions
   })
 );
 
-app.use("/api/auth/login", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/encryption", encryptionRoutes);
 
