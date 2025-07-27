@@ -10,6 +10,7 @@ export const generateToken = (userId, res) => {
     httpOnly: true, // prevent XSS attacks cross-site scripting attacks
     sameSite: "none", // Allow cross-site cookies for production
     secure: process.env.NODE_ENV !== "development",
+    domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // Allow subdomain sharing
   });
 
   return token;
