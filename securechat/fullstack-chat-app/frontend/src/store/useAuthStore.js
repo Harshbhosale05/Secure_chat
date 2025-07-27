@@ -8,6 +8,7 @@ const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
+  authToken: null,
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
@@ -17,6 +18,13 @@ export const useAuthStore = create((set, get) => ({
 
   checkAuth: async () => {
     try {
+      // Check if we have a stored token
+      const storedToken = localStorage.getItem('authToken');
+      if (storedToken) {
+        window.authToken = storedToken;
+        set({ authToken: storedToken });
+      }
+      
       const res = await axiosInstance.get("/auth/check");
 
       set({ authUser: res.data });
@@ -27,7 +35,9 @@ export const useAuthStore = create((set, get) => ({
       get().connectSocket();
     } catch (error) {
       console.log("Error in checkAuth:", error);
-      set({ authUser: null });
+      set({ authUser: null, authToken: null });
+      localStorage.removeItem('authToken');
+      window.authToken = null;
     } finally {
       set({ isCheckingAuth: false });
     }
@@ -61,7 +71,13 @@ export const useAuthStore = create((set, get) => ({
       console.log("Login response headers:", res.headers);
       console.log("Cookies in response:", document.cookie);
       
-      set({ authUser: res.data });
+      set({ authUser: res.data, authToken: res.data.token });
+      
+      // Store token in localStorage for persistence
+      if (res.data.token) {
+        localStorage.setItem('authToken', res.data.token);
+        window.authToken = res.data.token;
+      }
 
       // Wait a moment for the cookie to be set before initializing encryption
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -91,7 +107,11 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
-      set({ authUser: null });
+      set({ authUser: null, authToken: null });
+      
+      // Clear token from localStorage
+      localStorage.removeItem('authToken');
+      window.authToken = null;
 
       // Clear encryption data on logout
       useEncryptionStore.getState().clearEncryptionData();

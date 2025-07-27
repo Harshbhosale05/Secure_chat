@@ -4,10 +4,21 @@ import User from "../models/user.model.js";
 export const protectRoute = async (req, res, next) => {
   try {
     console.log("Cookies received:", req.cookies);
-    const token = req.cookies.jwt;
+    console.log("Authorization header:", req.headers.authorization);
+    
+    // Check for token in cookie first, then in Authorization header
+    let token = req.cookies.jwt;
+    
+    if (!token && req.headers.authorization) {
+      // Extract token from "Bearer <token>" format
+      const authHeader = req.headers.authorization;
+      if (authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+      }
+    }
 
     if (!token) {
-      console.log("No JWT token found in cookies");
+      console.log("No JWT token found in cookies or Authorization header");
       return res.status(401).json({ message: "Unauthorized - No Token Provided" });
     }
 

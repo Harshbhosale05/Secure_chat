@@ -5,6 +5,7 @@ export const generateToken = (userId, res) => {
     expiresIn: "7d",
   });
 
+  // Set cookie for backward compatibility
   res.cookie("jwt", token, {
     maxAge: 7 * 24 * 60 * 60 * 1000, // MS
     httpOnly: true, // prevent XSS attacks cross-site scripting attacks
@@ -12,5 +13,6 @@ export const generateToken = (userId, res) => {
     secure: process.env.NODE_ENV !== "development",
   });
 
+  // Also return the token in the response body for frontend to store
   return token;
 };

@@ -85,7 +85,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    generateToken(user._id, res);
+    const token = generateToken(user._id, res);
     
     console.log("Login successful for user:", user._id);
     console.log("Response headers:", res.getHeaders());
@@ -99,7 +99,8 @@ export const login = async (req, res) => {
       publicKey: user.publicKey,
       keyVersion: user.keyVersion,
       securitySettings: user.securitySettings,
-      hasEncryptionKeys: !!user.publicKey
+      hasEncryptionKeys: !!user.publicKey,
+      token: token // Include token in response
     });
   } catch (error) {
     console.log("Error in login controller", error.message);

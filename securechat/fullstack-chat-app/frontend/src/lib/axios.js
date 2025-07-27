@@ -10,10 +10,17 @@ export const axiosInstance = axios.create({
 	},
 });
 
-// Add request interceptor to log cookies
+// Add request interceptor to add Authorization header
 axiosInstance.interceptors.request.use(
 	(config) => {
 		console.log('Request config:', config);
+		
+		// Get token from localStorage or state management
+		const token = localStorage.getItem('authToken') || window.authToken;
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
+		
 		return config;
 	},
 	(error) => {
