@@ -23,8 +23,8 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173', // for local dev
-      
-      'https://secure-chat-1-540z.onrender.com' // your deployed frontend
+      'https://secure-chat-1-540z.onrender.com', // your old deployed frontend
+      'https://secure-chat-2-gtd7.onrender.com' // your new deployed frontend
     ],
     credentials: true, // if you use cookies/sessions
   })
