@@ -19,6 +19,12 @@ const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Add debugging middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Cookies:`, req.cookies);
+  next();
+});
 app.use(
   cors({
     origin: [

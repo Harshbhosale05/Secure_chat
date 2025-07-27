@@ -86,6 +86,9 @@ export const login = async (req, res) => {
     }
 
     generateToken(user._id, res);
+    
+    console.log("Login successful for user:", user._id);
+    console.log("Response headers:", res.getHeaders());
 
     // Include user's public key and security settings in login response
     res.status(200).json({
