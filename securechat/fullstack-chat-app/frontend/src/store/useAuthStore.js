@@ -57,7 +57,14 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
+      console.log("Login response:", res);
+      console.log("Login response headers:", res.headers);
+      console.log("Cookies in response:", document.cookie);
+      
       set({ authUser: res.data });
+
+      // Wait a moment for the cookie to be set before initializing encryption
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Initialize encryption after successful login and wait for it to complete
       await useEncryptionStore.getState().initializeEncryption();
@@ -74,6 +81,7 @@ export const useAuthStore = create((set, get) => ({
 
       get().connectSocket();
     } catch (error) {
+      console.log("Login error:", error);
       toast.error(error.response.data.message);
     } finally {
       set({ isLoggingIn: false });

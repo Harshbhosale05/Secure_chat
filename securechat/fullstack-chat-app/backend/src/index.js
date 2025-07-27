@@ -18,13 +18,7 @@ const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
 app.use(express.json());
-app.use(cookieParser());
 
-// Add debugging middleware to log all requests
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - Cookies:`, req.cookies);
-  next();
-});
 app.use(
   cors({
     origin: [
@@ -34,9 +28,18 @@ app.use(
     ],
     credentials: true, // if you use cookies/sessions
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie'],
+    exposedHeaders: ['Set-Cookie'],
   })
 );
+
+app.use(cookieParser());
+
+// Add debugging middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Cookies:`, req.cookies);
+  next();
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);

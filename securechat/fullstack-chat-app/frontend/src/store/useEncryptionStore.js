@@ -26,15 +26,20 @@ export const useEncryptionStore = create((set, get) => ({
       const keyVersion = clientEncryption.getKeyVersion();
       const securitySettings = clientEncryption.getSecuritySettings();
       let publicKey = get().publicKey;
+      
       // If publicKey is missing, fetch from backend
       if (!publicKey) {
         try {
+          console.log('Fetching public key from backend...');
           const res = await axiosInstance.get('/encryption/public-key/me');
+          console.log('Public key response:', res);
           publicKey = res.data.publicKey;
         } catch (err) {
+          console.log('Failed to fetch public key:', err);
           publicKey = '';
         }
       }
+      
       set({
         privateKey,
         publicKey,
