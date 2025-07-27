@@ -27,6 +27,8 @@ app.use(
       'https://secure-chat-2-gtd7.onrender.com' // your new deployed frontend
     ],
     credentials: true, // if you use cookies/sessions
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
 
